@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MnTNotes.Core\MnTNotes.Core.csproj" />
+    <ProjectReference Include="..\MnTNotes.Data\MnTNotes.Data.csproj" />
+  </ItemGroup>
+
+</Project>

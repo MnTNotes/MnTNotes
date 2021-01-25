@@ -1,6 +1,6 @@
 # Project Private Files
 privatefiles/
-MnTNotes/db/SqliteDB.db
+MnTNotes/Presentation/MnTNotes.Web/App_Data
 
 # Windows thumbnail cache files
 Thumbs.db
