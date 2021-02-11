@@ -29,22 +29,22 @@
     - Users can login and register
 	- Users can "Show, Add, Edit, Delete Own Notes"
 
-- **DB**
+- **DB** \
 ![DB](/images/0DBDiagram.png)
 
-- **Notes**
+- **Notes** \
 ![DB](/images/1Notes.png)
 
 - **Code Maps**
-    - Base
+    - Base \
     ![Codemap1](/images/2CodeMap1.png)
-    - Presentation Classes
+    - Presentation Classes \
     ![Codemap2](/images/2CodeMap2.png)
-    - Presentation Classes with Properties and Methods
+    - Presentation Classes with Properties and Methods \
     ![Codemap3](/images/2CodeMap3.png)
-    - Libraries Classes
+    - Libraries Classes \
     ![Codemap4](/images/2CodeMap4.png)
-    - Libraries Classes with Properties and Methods
+    - Libraries Classes with Properties and Methods \
     ![Codemap5](/images/2CodeMap5.png)
 
 - **TODO**
