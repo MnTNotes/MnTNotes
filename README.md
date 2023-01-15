@@ -1,4 +1,4 @@
-# MnTNotes - .Net Core 5 React with Identity Server 4
+# MnTNotes - .Net 6 React with Identity Server
 ## Just Another Notes App
 ### React Draft Wysiwyg and SQLite
 
@@ -13,13 +13,13 @@
     - (Optional) Run "Update-Database" on Package Manager Console
 
 - **Technologies** 
-	- .Net Core 5
+	- .Net 6
 	- Entity Framework Code-First
 	- DataAnnotation & Fluent API
 	- React
 	- React Draft Wysiwyg
 	- Reactstrap
-	- Identity Server 4
+	- Identity Server
 
 - **N-Tier architecture**
     - Libraries: Core, Data, Services
@@ -47,14 +47,9 @@
     - Libraries Classes with Properties and Methods \
     ![Codemap5](/images/2CodeMap5.png)
 
-- **TODO**
-	- API and Mobile Application Layer
-	- User Profile Page
-	- User Roles
-
 - **Acknowledgments**
-	- Thanks! [Microsoft](https://github.com/dotnet/core) for .Net Core 5.
-	- Thanks! [IdentityServer4](https://identityserver4.readthedocs.io/)
+	- Thanks! [Microsoft](https://github.com/dotnet/core) for .Net 6.
+	- Thanks! [IdentityServer](https://docs.duendesoftware.com/identityserver/v6)
 	- Thanks! [reactstrap](https://reactstrap.github.io/)
 	- Thanks! [React Draft Wysiwyg](https://github.com/jpuri/react-draft-wysiwyg)
 	

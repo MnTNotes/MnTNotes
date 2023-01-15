@@ -1,45 +1,65 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
-using System;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace MnTNotes.Data.Migrations
+#nullable disable
+
+namespace MnTNotes.Web.Migrations
 {
-    public partial class Initial : Migration
+    public partial class initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "DeviceFlowCodes",
+                name: "DeviceCodes",
                 columns: table => new
                 {
-                    DeviceCode = table.Column<string>(type: "TEXT", nullable: false),
-                    UserCode = table.Column<string>(type: "TEXT", nullable: true),
-                    SubjectId = table.Column<string>(type: "TEXT", nullable: true),
-                    SessionId = table.Column<string>(type: "TEXT", nullable: true),
-                    ClientId = table.Column<string>(type: "TEXT", nullable: true),
-                    Description = table.Column<string>(type: "TEXT", nullable: true),
+                    UserCode = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false),
+                    DeviceCode = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false),
+                    SubjectId = table.Column<string>(type: "TEXT", maxLength: 200, nullable: true),
+                    SessionId = table.Column<string>(type: "TEXT", maxLength: 100, nullable: true),
+                    ClientId = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false),
+                    Description = table.Column<string>(type: "TEXT", maxLength: 200, nullable: true),
                     CreationTime = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    Expiration = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    Data = table.Column<string>(type: "TEXT", nullable: true)
+                    Expiration = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    Data = table.Column<string>(type: "TEXT", maxLength: 50000, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_DeviceFlowCodes", x => x.DeviceCode);
+                    table.PrimaryKey("PK_DeviceCodes", x => x.UserCode);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Keys",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "TEXT", nullable: false),
+                    Version = table.Column<int>(type: "INTEGER", nullable: false),
+                    Created = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    Use = table.Column<string>(type: "TEXT", nullable: true),
+                    Algorithm = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
+                    IsX509Certificate = table.Column<bool>(type: "INTEGER", nullable: false),
+                    DataProtected = table.Column<bool>(type: "INTEGER", nullable: false),
+                    Data = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Keys", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
                 name: "PersistedGrants",
                 columns: table => new
                 {
-                    Key = table.Column<string>(type: "TEXT", nullable: false),
-                    Type = table.Column<string>(type: "TEXT", nullable: true),
-                    SubjectId = table.Column<string>(type: "TEXT", nullable: true),
-                    SessionId = table.Column<string>(type: "TEXT", nullable: true),
-                    ClientId = table.Column<string>(type: "TEXT", nullable: true),
-                    Description = table.Column<string>(type: "TEXT", nullable: true),
+                    Key = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false),
+                    Type = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
+                    SubjectId = table.Column<string>(type: "TEXT", maxLength: 200, nullable: true),
+                    SessionId = table.Column<string>(type: "TEXT", maxLength: 100, nullable: true),
+                    ClientId = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false),
+                    Description = table.Column<string>(type: "TEXT", maxLength: 200, nullable: true),
                     CreationTime = table.Column<DateTime>(type: "TEXT", nullable: false),
                     Expiration = table.Column<DateTime>(type: "TEXT", nullable: true),
                     ConsumedTime = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    Data = table.Column<string>(type: "TEXT", nullable: true)
+                    Data = table.Column<string>(type: "TEXT", maxLength: 50000, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -51,6 +71,7 @@ namespace MnTNotes.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "TEXT", nullable: false),
+                    Discriminator = table.Column<string>(type: "TEXT", nullable: false),
                     Name = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     NormalizedName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     ConcurrencyStamp = table.Column<string>(type: "TEXT", nullable: true)
@@ -93,7 +114,9 @@ namespace MnTNotes.Data.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     RoleId = table.Column<string>(type: "TEXT", nullable: false),
                     ClaimType = table.Column<string>(type: "TEXT", nullable: true),
-                    ClaimValue = table.Column<string>(type: "TEXT", nullable: true)
+                    ClaimValue = table.Column<string>(type: "TEXT", nullable: true),
+                    Discriminator = table.Column<string>(type: "TEXT", nullable: false),
+                    RoleId1 = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -104,6 +127,11 @@ namespace MnTNotes.Data.Migrations
                         principalTable: "Roles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_RoleClaims_Roles_RoleId1",
+                        column: x => x.RoleId1,
+                        principalTable: "Roles",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -125,8 +153,7 @@ namespace MnTNotes.Data.Migrations
                         name: "FK_Notes_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -135,11 +162,11 @@ namespace MnTNotes.Data.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Discriminator = table.Column<string>(type: "TEXT", nullable: true),
-                    ApplicationUserId = table.Column<string>(type: "TEXT", nullable: true),
                     UserId = table.Column<string>(type: "TEXT", nullable: false),
                     ClaimType = table.Column<string>(type: "TEXT", nullable: true),
-                    ClaimValue = table.Column<string>(type: "TEXT", nullable: true)
+                    ClaimValue = table.Column<string>(type: "TEXT", nullable: true),
+                    Discriminator = table.Column<string>(type: "TEXT", nullable: false),
+                    ApplicationUserId = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -148,8 +175,7 @@ namespace MnTNotes.Data.Migrations
                         name: "FK_UserClaims_Users_ApplicationUserId",
                         column: x => x.ApplicationUserId,
                         principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_UserClaims_Users_UserId",
                         column: x => x.UserId,
@@ -162,10 +188,12 @@ namespace MnTNotes.Data.Migrations
                 name: "UserLogins",
                 columns: table => new
                 {
-                    LoginProvider = table.Column<string>(type: "TEXT", nullable: false),
-                    ProviderKey = table.Column<string>(type: "TEXT", nullable: false),
+                    LoginProvider = table.Column<string>(type: "TEXT", maxLength: 128, nullable: false),
+                    ProviderKey = table.Column<string>(type: "TEXT", maxLength: 128, nullable: false),
                     ProviderDisplayName = table.Column<string>(type: "TEXT", nullable: true),
-                    UserId = table.Column<string>(type: "TEXT", nullable: false)
+                    UserId = table.Column<string>(type: "TEXT", nullable: false),
+                    Discriminator = table.Column<string>(type: "TEXT", nullable: false),
+                    UserId1 = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -176,6 +204,11 @@ namespace MnTNotes.Data.Migrations
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UserLogins_Users_UserId1",
+                        column: x => x.UserId1,
+                        principalTable: "Users",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -183,7 +216,10 @@ namespace MnTNotes.Data.Migrations
                 columns: table => new
                 {
                     UserId = table.Column<string>(type: "TEXT", nullable: false),
-                    RoleId = table.Column<string>(type: "TEXT", nullable: false)
+                    RoleId = table.Column<string>(type: "TEXT", nullable: false),
+                    Discriminator = table.Column<string>(type: "TEXT", nullable: false),
+                    UserId1 = table.Column<string>(type: "TEXT", nullable: true),
+                    RoleId1 = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -195,11 +231,21 @@ namespace MnTNotes.Data.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
+                        name: "FK_UserRoles_Roles_RoleId1",
+                        column: x => x.RoleId1,
+                        principalTable: "Roles",
+                        principalColumn: "Id");
+                    table.ForeignKey(
                         name: "FK_UserRoles_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UserRoles_Users_UserId1",
+                        column: x => x.UserId1,
+                        principalTable: "Users",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -207,9 +253,11 @@ namespace MnTNotes.Data.Migrations
                 columns: table => new
                 {
                     UserId = table.Column<string>(type: "TEXT", nullable: false),
-                    LoginProvider = table.Column<string>(type: "TEXT", nullable: false),
-                    Name = table.Column<string>(type: "TEXT", nullable: false),
-                    Value = table.Column<string>(type: "TEXT", nullable: true)
+                    LoginProvider = table.Column<string>(type: "TEXT", maxLength: 128, nullable: false),
+                    Name = table.Column<string>(type: "TEXT", maxLength: 128, nullable: false),
+                    Value = table.Column<string>(type: "TEXT", nullable: true),
+                    Discriminator = table.Column<string>(type: "TEXT", nullable: false),
+                    UserId1 = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -220,7 +268,28 @@ namespace MnTNotes.Data.Migrations
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UserTokens_Users_UserId1",
+                        column: x => x.UserId1,
+                        principalTable: "Users",
+                        principalColumn: "Id");
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DeviceCodes_DeviceCode",
+                table: "DeviceCodes",
+                column: "DeviceCode",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DeviceCodes_Expiration",
+                table: "DeviceCodes",
+                column: "Expiration");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Keys_Use",
+                table: "Keys",
+                column: "Use");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Notes_UserId",
@@ -228,9 +297,34 @@ namespace MnTNotes.Data.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_PersistedGrants_ConsumedTime",
+                table: "PersistedGrants",
+                column: "ConsumedTime");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PersistedGrants_Expiration",
+                table: "PersistedGrants",
+                column: "Expiration");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PersistedGrants_SubjectId_ClientId_Type",
+                table: "PersistedGrants",
+                columns: new[] { "SubjectId", "ClientId", "Type" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PersistedGrants_SubjectId_SessionId_Type",
+                table: "PersistedGrants",
+                columns: new[] { "SubjectId", "SessionId", "Type" });
+
+            migrationBuilder.CreateIndex(
                 name: "IX_RoleClaims_RoleId",
                 table: "RoleClaims",
                 column: "RoleId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RoleClaims_RoleId1",
+                table: "RoleClaims",
+                column: "RoleId1");
 
             migrationBuilder.CreateIndex(
                 name: "RoleNameIndex",
@@ -254,9 +348,24 @@ namespace MnTNotes.Data.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_UserLogins_UserId1",
+                table: "UserLogins",
+                column: "UserId1");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_UserRoles_RoleId",
                 table: "UserRoles",
                 column: "RoleId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserRoles_RoleId1",
+                table: "UserRoles",
+                column: "RoleId1");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserRoles_UserId1",
+                table: "UserRoles",
+                column: "UserId1");
 
             migrationBuilder.CreateIndex(
                 name: "EmailIndex",
@@ -268,12 +377,20 @@ namespace MnTNotes.Data.Migrations
                 table: "Users",
                 column: "NormalizedUserName",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserTokens_UserId1",
+                table: "UserTokens",
+                column: "UserId1");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "DeviceFlowCodes");
+                name: "DeviceCodes");
+
+            migrationBuilder.DropTable(
+                name: "Keys");
 
             migrationBuilder.DropTable(
                 name: "Notes");

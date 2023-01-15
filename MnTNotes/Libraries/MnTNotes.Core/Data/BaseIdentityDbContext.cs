@@ -1,4 +1,4 @@
-﻿using IdentityServer4.EntityFramework.Entities;
+﻿using Duende.IdentityServer.EntityFramework.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using MnTNotes.Core.Data.Domain;
